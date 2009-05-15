@@ -66,10 +66,7 @@ syn keyword nimrodTodo		TODO FIXME XXX contained
 " strings
 syn region nimrodString		matchgroup=Normal start=+[uU]\=`+ end=+`+ skip=+\\\\\|\\"+ contains=nimrodEscape,@Spell
 syn region nimrodString		matchgroup=Normal start=+[uU]\="+ end=+"+ skip=+\\\\\|\\"+ contains=nimrodEscape,@Spell
-syn region nimrodRawString	matchgroup=Normal start=+[uU]\=[rR]'+ end=+'+ skip=+\\\\\|\\'+ contains=@Spell
 syn region nimrodRawString	matchgroup=Normal start=+[uU]\=[rR]"+ end=+"+ skip=+\\\\\|\\"+ contains=@Spell
-syn region nimrodRawString	matchgroup=Normal start=+[uU]\=[rR]"""+ end=+"""+ contains=@Spell
-syn region nimrodRawString	matchgroup=Normal start=+[uU]\=[rR]'''+ end=+'''+ contains=@Spell
 syn match  nimrodEscape		+\\[abfnrtv'"\\]+ contained
 syn match  nimrodEscape		"\\\o\{1,3}" contained
 syn match  nimrodEscape		"\\x\x\{2}" contained
