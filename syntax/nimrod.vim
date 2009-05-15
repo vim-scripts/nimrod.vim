@@ -1,7 +1,7 @@
 " Vim syntax file
 " Language:	Nimrod
 " Maintainer:	Kearn Holliday (thekearnman at gmail dot com)
-" Updated: 2009-05-14
+" Updated: 2009-05-15
 "
 " Options to control nimrod syntax highlighting:
 "
@@ -106,7 +106,8 @@ if exists("nimrod_highlight_builtins")
   syn keyword nimrodBuiltin neginf nan QuitSuccess QuitFailure dbgLineHook stdin
   syn keyword nimrodBuiltin stdout stderr defined new high low sizeof succ pred
   syn keyword nimrodBuiltin inc dec newSeq len incl excl card ord chr ze ze64
-  syn keyword nimrodBuiltin toU8 toU16 toU32 abs min max contains add repr
+  syn keyword nimrodBuiltin toU8 toU16 toU32 abs min max add repr
+  syn match   nimrodBuiltin "\<contains\>"
   syn keyword nimrodBuiltin toFloat toBiggestFloat toInt toBiggestInt addQuitProc
   syn keyword nimrodBuiltin copy setLen newString zeroMem copyMem moveMem
   syn keyword nimrodBuiltin equalMem alloc alloc0 realloc dealloc setLen assert
