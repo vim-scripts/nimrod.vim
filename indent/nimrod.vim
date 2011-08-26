@@ -66,8 +66,8 @@ function! GetNimrodIndent(lnum)
   endif
   
   if pline =~ ':\s*$'
+    \ || pline =~ '=\s*$' 
     \ || pline =~ '\(type\|import\|const\|var\)\s*$'
-    \ || pline =~ 'proc.*=\s*$' 
     \ || pline =~ '=\s*\(object\|enum\)'
     return plindent + &sw
   endif
