@@ -11,6 +11,8 @@ setlocal formatoptions-=t formatoptions+=croql
 setlocal comments=:#
 setlocal commentstring=#\ %s
 
+compiler nimrod
+
 let &cpo = s:cpo_save
 unlet s:cpo_save
 

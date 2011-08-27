@@ -14,9 +14,7 @@ set cpo-=C
 CompilerSet makeprg=nimrod\ c\ $*
 
 CompilerSet errorformat=
-    \%f(%l,\ %c)\ Error:\ %m,
-    \%f(%l,\ %c)\ Hint:\ %m,
-    \%f(%l,\ %c)\ Warning:\ %m
+    \%f(%l\\,\ %c)\ %m
 
 let &cpo = s:cpo_save
 unlet s:cpo_save
