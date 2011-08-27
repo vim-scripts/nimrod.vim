@@ -82,7 +82,7 @@ if nimrod_highlight_numbers == 1
   syn match   nimrodNumber	"\<[0-9_]\+\.[0-9_]\+\([eE][+-]\=[0-9_]\+\)\=[jJ]\=\>"
 endif
 
-if exists("nimrod_highlight_builtins")
+if nimrod_highlight_builtins == 1
   " builtin functions, types and objects, not really part of the syntax
   syn keyword nimrodBuiltin int int8 int16 int32 int64 float float32 float64 bool
   syn keyword nimrodBuiltin char string cstring pointer range array openarray seq
@@ -114,7 +114,7 @@ if exists("nimrod_highlight_builtins")
   syn keyword nimrodBuiltin fileHandle countdown countup items lines
 endif
 
-if exists("nimrod_highlight_exceptions")
+if nimrod_highlight_exceptions == 1
   " builtin exceptions and warnings
   syn keyword nimrodException E_Base EAsynch ESynch ESystem EIO EOS
   syn keyword nimrodException ERessourceExhausted EArithmetic EDivByZero
@@ -125,12 +125,11 @@ if exists("nimrod_highlight_exceptions")
   syn keyword nimrodException EInvalidObject
 endif
 
-if exists("nimrod_highlight_space_errors")
+if nimrod_highlight_space_errors == 1
   " trailing whitespace
   syn match   nimrodSpaceError   display excludenl "\S\s\+$"ms=s+1
-  " mixed tabs and spaces
-  syn match   nimrodSpaceError   display " \+\t"
-  syn match   nimrodSpaceError   display "\t\+ "
+  " any tabs are illegal in nimrod
+  syn match   nimrodSpaceError   display "\t"
 endif
 
 syn sync match nimrodSync grouphere NONE "):$"
@@ -181,5 +180,4 @@ if version >= 508 || !exists("did_nimrod_syn_inits")
 endif
 
 let b:current_syntax = "nimrod"
-
 
