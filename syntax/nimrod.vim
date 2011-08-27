@@ -1,32 +1,3 @@
-" Vim syntax file
-" Language:	Nimrod
-" Maintainer:	Kearn Holliday (thekearnman at gmail dot com)
-" Updated: 2009-05-15
-"
-" Options to control nimrod syntax highlighting:
-"
-" For highlighted numbers:
-"
-   let nimrod_highlight_numbers = 1
-"
-" For highlighted builtin functions:
-"
-   let nimrod_highlight_builtins = 1
-"
-" For highlighted standard exceptions:
-"
-   let nimrod_highlight_exceptions = 1
-"
-" Highlight erroneous whitespace:
-"
-   let nimrod_highlight_space_errors = 1
-"
-" If you want all possible nimrod highlighting (the same as setting the
-" preceding options):
-"
-"    let nimrod_highlight_all = 1
-"
-
 " For version 5.x: Clear all syntax items
 " For version 6.x: Quit when a syntax file was already loaded
 if version < 600
@@ -35,43 +6,19 @@ elseif exists("b:current_syntax")
   finish
 endif
 
-syn region nimrodBrackets       contained extend keepend matchgroup=Bold start=+\(\\\)\@<!\[+ end=+]\|$+ skip=+\\\s*$\|\(\\\)\@<!\\]+ contains=@tclCommandCluster
-
-syn keyword nimrodStatement     addr as asm
-syn keyword nimrodStatement     block break
-syn keyword nimrodStatement     case cast const continue converter
-syn keyword nimrodStatement     discard div
-syn keyword nimrodStatement     elif else end enum except exception echo
-syn keyword nimrodStatement     finally for from generic
-syn keyword nimrodStatement     if implies import include isnot iterator
-syn keyword nimrodStatement     lambda
-syn keyword nimrodStatement     macro method mod
-syn keyword nimrodStatement     nil notin
-syn keyword nimrodStatement     object of out
-syn keyword nimrodStatement     proc ptr
-syn keyword nimrodStatement     raise ref return
-syn keyword nimrodStatement     template try tuple type
-syn keyword nimrodStatement     var
-syn keyword nimrodStatement     when where while with without
-syn keyword nimrodStatement     yield
-syn match   nimrodFunction	"[a-zA-Z_][a-zA-Z0-9_]*" contained
-syn match   nimrodClass         "[a-zA-Z_][a-zA-Z0-9_]*" contained
-syn keyword nimrodRepeat	for while
-syn keyword nimrodConditional	if elif else case of
-syn keyword nimrodOperator	and in is not or xor shl shr
-syn match   nimrodComment	"#.*$" contains=nimrodTodo,@Spell
-syn keyword nimrodTodo		TODO FIXME XXX contained
-
-
-" strings
-syn region nimrodString		matchgroup=Normal start=+[uU]\=`+ end=+`+ skip=+\\\\\|\\"+ contains=nimrodEscape,@Spell
-syn region nimrodString		matchgroup=Normal start=+[uU]\="+ end=+"+ skip=+\\\\\|\\"+ contains=nimrodEscape,@Spell
-syn region nimrodRawString	matchgroup=Normal start=+[uU]\=[rR]"+ end=+"+ skip=+\\\\\|\\"+ contains=@Spell
-syn match  nimrodEscape		+\\[abfnrtv'"\\]+ contained
-syn match  nimrodEscape		"\\\o\{1,3}" contained
-syn match  nimrodEscape		"\\x\x\{2}" contained
-syn match  nimrodEscape		"\(\\u\x\{4}\|\\U\x\{8}\)" contained
-syn match  nimrodEscape		"\\$"
+" Keep user-supplied options
+if !exists("nimrod_highlight_numbers")
+  let nimrod_highlight_numbers = 1
+endif
+if !exists("nimrod_highlight_builtins")
+  let nimrod_highlight_builtins = 1
+endif
+if !exists("nimrod_highlight_exceptions")
+  let nimrod_highlight_exceptions = 1
+endif
+if !exists("nimrod_highlight_space_errors")
+  let nimrod_highlight_space_errors = 1
+endif
 
 if exists("nimrod_highlight_all")
   let nimrod_highlight_numbers      = 1
@@ -80,13 +27,59 @@ if exists("nimrod_highlight_all")
   let nimrod_highlight_space_errors = 1
 endif
 
-if exists("nimrod_highlight_numbers")
+syn region nimrodBrackets       contained extend keepend matchgroup=Bold start=+\(\\\)\@<!\[+ end=+]\|$+ skip=+\\\s*$\|\(\\\)\@<!\\]+ contains=@tclCommandCluster
+
+syn keyword nimrodKeyword       addr and as asm atomic
+syn keyword nimrodKeyword       bind block break
+syn keyword nimrodKeyword       case cast const continue converter
+syn keyword nimrodKeyword       discard distinct div
+syn keyword nimrodKeyword       elif else end enum except
+syn keyword nimrodKeyword       finally for from generic
+syn keyword nimrodKeyword       if implies import in include is isnot iterator
+syn keyword nimrodKeyword       lambda let
+syn keyword nimrodKeyword       macro method mod
+syn keyword nimrodKeyword       nil not notin
+syn keyword nimrodKeyword       object of or out
+syn keyword nimrodKeyword       proc nextgroup=nimrodFunction skipwhite
+syn keyword nimrodKeyword       raise ref return
+syn keyword nimrodKeyword       shl shr
+syn keyword nimrodKeyword       template try tuple type
+syn keyword nimrodKeyword       ptr var
+syn keyword nimrodKeyword       when while with without
+syn keyword nimrodKeyword       xor
+syn keyword nimrodKeyword       yield
+
+syn match   nimrodFunction	    "[a-zA-Z_][a-zA-Z0-9_]*" contained
+syn match   nimrodClass         "[a-zA-Z_][a-zA-Z0-9_]*" contained
+syn keyword nimrodRepeat	      for while
+syn keyword nimrodConditional	  if elif else case of
+syn keyword nimrodOperator	    and in is not or xor shl shr div
+syn match   nimrodComment	      "#.*$" contains=nimrodTodo,@Spell
+syn keyword nimrodTodo		      TODO FIXME XXX contained
+syn keyword nimrodBoolean       true false
+
+
+" Strings
+syn region nimrodString start=+'+ skip=+\\\\\|\\'\|\\$+ excludenl end=+'+ end=+$+ keepend contains=nimrodEscape,nimrodEscapeError,@Spell
+syn region nimrodString start=+"+ skip=+\\\\\|\\"\|\\$+ excludenl end=+"+ end=+$+ keepend contains=nimrodEscape,nimrodEscapeError,@Spell
+syn region nimrodString start=+"""+ end=+"""+ keepend contains=nimrodEscape,nimrodEscapeError,@Spell
+syn region nimrodRawString matchgroup=Normal start=+[rR]"+ end=+"+ skip=+\\\\\|\\"+ contains=@Spell
+
+syn match  nimrodEscape		+\\[abfnrtv'"\\]+ contained
+syn match  nimrodEscape		"\\\o\{1,3}" contained
+syn match  nimrodEscape		"\\x\x\{2}" contained
+syn match  nimrodEscape		"\(\\u\x\{4}\|\\U\x\{8}\)" contained
+syn match  nimrodEscape		"\\$"
+
+syn match nimrodEscapeError "\\x\x\=\X" display contained
+
+if nimrod_highlight_numbers == 1
   " numbers (including longs and complex)
   syn match   nimrodNumber	"\<0x\x\+[Ll]\=\>"
-  syn match   nimrodNumber	"\<\d\+[LljJ]\=\>"
-  syn match   nimrodNumber	"\.\d\+\([eE][+-]\=\d\+\)\=[jJ]\=\>"
-  syn match   nimrodNumber	"\<\d\+\.\([eE][+-]\=\d\+\)\=[jJ]\=\>"
-  syn match   nimrodNumber	"\<\d\+\.\d\+\([eE][+-]\=\d\+\)\=[jJ]\=\>"
+  syn match   nimrodNumber	"\<[0-9_]\+[LljJ]\=\>"
+  syn match   nimrodNumber	"\.[0-9_]\+\([eE][+-]\=[0-9_]\+\)\=[jJ]\=\>"
+  syn match   nimrodNumber	"\<[0-9_]\+\.\([eE][+-]\=[0-9_]\+\)\=[jJ]\=\>"
+  syn match   nimrodNumber	"\<[0-9_]\+\.[0-9_]\+\([eE][+-]\=[0-9_]\+\)\=[jJ]\=\>"
 endif
 
 if exists("nimrod_highlight_builtins")
@@ -153,29 +146,34 @@ if version >= 508 || !exists("did_nimrod_syn_inits")
   endif
 
   " The default methods for highlighting.  Can be overridden later
-  HiLink nimrodBrackets         Operator
-  HiLink nimrodStatement	Statement
-  HiLink nimrodFunction		Function
-  HiLink nimrodConditional	Conditional
-  HiLink nimrodRepeat		Repeat
-  HiLink nimrodString		String
-  HiLink nimrodRawString	String
-  HiLink nimrodEscape		Special
-  HiLink nimrodOperator		Operator
-  HiLink nimrodPreCondit	PreCondit
-  HiLink nimrodComment		Comment
-  HiLink nimrodTodo		Todo
-  HiLink nimrodDecorator	Define
-  if exists("nimrod_highlight_numbers")
+  HiLink nimrodBrackets       Operator
+  HiLink nimrodKeyword	      Keyword
+  HiLink nimrodFunction	    	Function
+  HiLink nimrodConditional	  Conditional
+  HiLink nimrodRepeat		      Repeat
+  HiLink nimrodString		      String
+  HiLink nimrodRawString	    String
+  HiLink nimrodBoolean        Boolean
+  HiLink nimrodEscape		      Special
+  HiLink nimrodOperator		    Operator
+  HiLink nimrodPreCondit	    PreCondit
+  HiLink nimrodComment		    Comment
+  HiLink nimrodTodo		        Todo
+  HiLink nimrodDecorator	    Define
+  
+  if nimrod_highlight_numbers == 1
     HiLink nimrodNumber	Number
   endif
-  if exists("nimrod_highlight_builtins")
+  
+  if nimrod_highlight_builtins == 1
     HiLink nimrodBuiltin	Number
   endif
-  if exists("nimrod_highlight_exceptions")
+  
+  if nimrod_highlight_exceptions == 1
     HiLink nimrodException	Exception
   endif
-  if exists("nimrod_highlight_space_errors")
+  
+  if nimrod_highlight_space_errors == 1
     HiLink nimrodSpaceError	Error
   endif
 
