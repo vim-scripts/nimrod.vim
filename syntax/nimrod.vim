@@ -33,20 +33,18 @@ syn keyword nimrodKeyword       addr and as asm atomic
 syn keyword nimrodKeyword       bind block break
 syn keyword nimrodKeyword       case cast const continue converter
 syn keyword nimrodKeyword       discard distinct div
-syn keyword nimrodKeyword       elif else end enum except
+syn keyword nimrodKeyword       elif else enum except
 syn keyword nimrodKeyword       finally for from generic
 syn keyword nimrodKeyword       if implies import in include is isnot iterator
 syn keyword nimrodKeyword       lambda let
-syn keyword nimrodKeyword       macro method mod
 syn keyword nimrodKeyword       nil not notin
 syn keyword nimrodKeyword       object of or out
-syn keyword nimrodKeyword       proc nextgroup=nimrodFunction skipwhite
+syn keyword nimrodKeyword       proc method macro template nextgroup=nimrodFunction skipwhite
 syn keyword nimrodKeyword       raise ref return
-syn keyword nimrodKeyword       shl shr
-syn keyword nimrodKeyword       template try tuple type
+syn keyword nimrodKeyword       shl shr xom mod and
+syn keyword nimrodKeyword       try tuple type
 syn keyword nimrodKeyword       ptr var
 syn keyword nimrodKeyword       when while with without
-syn keyword nimrodKeyword       xor
 syn keyword nimrodKeyword       yield
 
 syn match   nimrodFunction	    "[a-zA-Z_][a-zA-Z0-9_]*" contained
