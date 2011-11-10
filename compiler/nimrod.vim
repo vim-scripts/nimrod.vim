@@ -14,10 +14,18 @@ set cpo-=C
 CompilerSet makeprg=nimrod\ c\ $*
 
 CompilerSet errorformat=
-    \%f(%l\\,\ %c)\ %m
+  \%-GHint:\ %m,
+  \%E%f(%l\\,\ %c)\ Error:\ %m,
+  \%W%f(%l\\,\ %c)\ Hint:\ %m
+
+" Syntastic syntax checking
+function! SyntaxCheckers_nimrod_GetLocList()
+  let makeprg = 'nimrod check %'
+  let errorformat = &errorformat
+  
+  return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
+endfunction
 
 let &cpo = s:cpo_save
 unlet s:cpo_save
-
-" vim: nowrap sw=2 sts=2 ts=8:
 
