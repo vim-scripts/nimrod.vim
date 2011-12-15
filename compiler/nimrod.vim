@@ -20,7 +20,22 @@ CompilerSet errorformat=
 
 " Syntastic syntax checking
 function! SyntaxCheckers_nimrod_GetLocList()
-  let makeprg = 'nimrod check %'
+  let save_cur = getpos('.')
+  call cursor(0, 0, 0)
+  
+  let PATTERN = "\\v^\\#\\s*included from \\zs.*\\ze"
+  let l = search(PATTERN, "n")
+
+  if l != 0
+    let f = matchstr(getline(l), PATTERN)
+    let l:to_check = expand('%:h') . "/" . f
+  else
+    let l:to_check = expand("%")
+  endif
+
+  call setpos('.', save_cur)
+
+  let makeprg = 'nimrod check ' . l:to_check
   let errorformat = &errorformat
   
   return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
