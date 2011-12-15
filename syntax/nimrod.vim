@@ -73,11 +73,10 @@ syn match nimrodEscapeError "\\x\x\=\X" display contained
 
 if nimrod_highlight_numbers == 1
   " numbers (including longs and complex)
-  syn match   nimrodNumber	"\<0x\x\+[Ll]\=\>"
-  syn match   nimrodNumber	"\<[0-9_]\+[LljJ]\=\>"
-  syn match   nimrodNumber	"\.[0-9_]\+\([eE][+-]\=[0-9_]\+\)\=[jJ]\=\>"
-  syn match   nimrodNumber	"\<[0-9_]\+\.\([eE][+-]\=[0-9_]\+\)\=[jJ]\=\>"
-  syn match   nimrodNumber	"\<[0-9_]\+\.[0-9_]\+\([eE][+-]\=[0-9_]\+\)\=[jJ]\=\>"
+  syn match   nimrodNumber	"\v<0x\x+(\'(i|I|f|F)(8|16|32|64))?>"
+  syn match   nimrodNumber	"\v<[0-9_]+(\'(i|I|f|F)(8|16|32|64))?>"
+  syn match   nimrodNumber	"\v\.[0-9_]+([eE][+-]=[0-9_]+)=>"
+  syn match   nimrodNumber	"\v<[0-9_]+(\.[0-9_]+)?([eE][+-]?[0-9_]+)?(\'(f|F)(32|64))?>"
 endif
 
 if nimrod_highlight_builtins == 1
