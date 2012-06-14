@@ -73,15 +73,15 @@ syn match nimrodEscapeError "\\x\x\=\X" display contained
 
 if nimrod_highlight_numbers == 1
   " numbers (including longs and complex)
-  syn match   nimrodNumber	"\v<0x\x+(\'(i|I|f|F)(8|16|32|64))?>"
-  syn match   nimrodNumber	"\v<[0-9_]+(\'(i|I|f|F)(8|16|32|64))?>"
+  syn match   nimrodNumber	"\v<0x\x+(\'(i|I|f|F|u|U)(8|16|32|64))?>"
+  syn match   nimrodNumber	"\v<[0-9_]+(\'(i|I|f|F|u|U)(8|16|32|64))?>"
   syn match   nimrodNumber	"\v\.[0-9_]+([eE][+-]=[0-9_]+)=>"
   syn match   nimrodNumber	"\v<[0-9_]+(\.[0-9_]+)?([eE][+-]?[0-9_]+)?(\'(f|F)(32|64))?>"
 endif
 
 if nimrod_highlight_builtins == 1
   " builtin functions, types and objects, not really part of the syntax
-  syn keyword nimrodBuiltin int int8 int16 int32 int64 float float32 float64 bool
+  syn keyword nimrodBuiltin int int8 int16 int32 int64 uint uint8 uint16 uint32 uint64 float float32 float64 bool
   syn keyword nimrodBuiltin char string cstring pointer range array openarray seq
   syn keyword nimrodBuiltin set Byte Natural Positive TObject PObject Conversion TResult TAddress
   syn keyword nimrodBuiltin BiggestInt BiggestFloat cchar cschar cshort cint
