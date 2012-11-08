@@ -36,6 +36,26 @@ fun! CurrentNimrodFile()
   return l:to_check
 endf
 
+let g:nimrod_symbol_types = {
+  \ 'skParam': 'v',
+  \ 'skVar': 'v',
+  \ 'skLet': 'v',
+  \ 'skTemp': 'v',
+  \ 'skForVar': 'v',
+  \ 'skConst': 'v',
+  \ 'skResult': 'v',
+  \ 'skGenericParam': 't',
+  \ 'skType': 't',
+  \ 'skField': 'm',
+  \ 'skProc': 'f',
+  \ 'skMethod': 'f',
+  \ 'skIterator': 'f',
+  \ 'skConverter': 'f',
+  \ 'skMacro': 'f',
+  \ 'skTemplate': 'f',
+  \ 'skEnumField': 'v',
+  \ }
+
 fun! NimComplete(findstart, base)
   if a:findstart
     if synIDattr(synIDtrans(synID(line("."),col("."),1)), "name") == 'Comment'
@@ -51,7 +71,8 @@ fun! NimComplete(findstart, base)
     for line in split(sugOut, '\n')
       let lineData = split(line, '\t')
       if lineData[0] == "sug"
-        let c = { 'word': lineData[2], 'info': lineData[3] }
+        let kind = get(g:nimrod_symbol_types, lineData[1], '')
+        let c = { 'word': lineData[2], 'kind': kind, 'menu': lineData[3], 'dup': 1 }
         call add(result, c)
       endif
     endfor
@@ -63,7 +84,7 @@ if !exists("g:neocomplcache_omni_patterns")
   let g:neocomplcache_omni_patterns = {}
 endif
 
-let g:neocomplcache_omni_patterns['nimrod'] = '[^. *\t]\.\w*\'
+let g:neocomplcache_omni_patterns['nimrod'] = '[^. *\t]\.\w*'
 
 fun! GotoDefinition_nimrod()
   let cmd = printf("nimrod idetools --def --track:\"%s,%d,%d\" \"%s\"",
