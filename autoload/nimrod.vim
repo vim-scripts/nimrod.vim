@@ -14,7 +14,7 @@ fun! s:UpdateNimLog()
 
   let g:nim_log = []
 
-  match Search /^nimrod.*/
+  match Search /^nimrod\ idetools.*/
 endf
 
 augroup NimLog
@@ -95,7 +95,7 @@ if !exists("g:neocomplcache_omni_patterns")
   let g:neocomplcache_omni_patterns = {}
 endif
 
-let g:neocomplcache_omni_patterns['nimrod'] = '[^. *\t]\.\w*'
+" let g:neocomplcache_omni_patterns['nimrod'] = '[^. *\t]\.\w*'
 
 fun! GotoDefinition_nimrod()
   let defOut = NimExec("--def")

@@ -10,7 +10,7 @@ set cpo&vim
 call nimrod#init()
 
 setlocal formatoptions-=t formatoptions+=croql
-setlocal comments=:#
+setlocal comments=:##,:#
 setlocal commentstring=#\ %s
 setlocal omnifunc=NimComplete
 compiler nimrod
