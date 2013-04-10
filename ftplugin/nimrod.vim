@@ -13,6 +13,8 @@ setlocal formatoptions-=t formatoptions+=croql
 setlocal comments=:##,:#
 setlocal commentstring=#\ %s
 setlocal omnifunc=NimComplete
+setlocal suffixesadd=.nim 
+
 compiler nimrod
 
 let &cpo = s:cpo_save
