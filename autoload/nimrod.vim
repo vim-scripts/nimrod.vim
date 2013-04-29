@@ -1,18 +1,23 @@
-fun! nimrod#init()
-endf
+let g:nimrod_log = []
+let s:plugin_path = escape(expand('<sfile>:p:h'), ' \')
 
-let g:nim_log = []
+exe 'pyfile ' . fnameescape(s:plugin_path) . '/nimrod_vim.py'
+
+fun! nimrod#init()
+  let b:nimrod_project_root = "/foo"
+  let b:nimrod_caas_enabled = 0
+endf
 
 fun! s:UpdateNimLog()
   setlocal buftype=nofile
   setlocal bufhidden=hide
   setlocal noswapfile
 
-  for entry in g:nim_log
+  for entry in g:nimrod_log
     call append(line('$'), split(entry, "\n"))
   endfor
 
-  let g:nim_log = []
+  let g:nimrod_log = []
 
   match Search /^nimrod\ idetools.*/
 endf
@@ -22,7 +27,7 @@ augroup NimLog
   au BufEnter log://nimrod call s:UpdateNimLog()
 augroup END
 
-fun! CurrentNimrodFile()
+fun! s:CurrentNimrodFile()
   let save_cur = getpos('.')
   call cursor(0, 0, 0)
   
@@ -61,13 +66,25 @@ let g:nimrod_symbol_types = {
   \ }
 
 fun! NimExec(op)
-  let cmd = printf("nimrod idetools %s --track:\"%s,%d,%d\" \"%s\"",
-            \ a:op, expand('%:p'), line('.'), col('.')-1, CurrentNimrodFile())
+  let cmd = printf("idetools %s --track:\"%s,%d,%d\" \"%s\"",
+              \ a:op, expand('%:p'), line('.'), col('.')-1, s:CurrentNimrodFile())
 
-  call add(g:nim_log, cmd)
-  let output = system(cmd)
-  call add(g:nim_log, output)
+  if b:nimrod_caas_enabled
+    exe printf("py execNimCmd('%s', '%s', False)", b:nimrod_project_root, cmd)
+    let output = l:py_res
+  else
+    let syscmd = "nimrod " . cmd
+    call add(g:nimrod_log, syscmd)
+    let output = system(syscmd)
+  endif
+
+  call add(g:nimrod_log, output)
   return output
+endf
+
+fun! NimExecAsync(op, Handler)
+  let result = NimExec(a:op)
+  call a:Handler(result)
 endf
 
 fun! NimComplete(findstart, base)
@@ -97,15 +114,32 @@ endif
 
 " let g:neocomplcache_omni_patterns['nimrod'] = '[^. *\t]\.\w*'
 
-fun! GotoDefinition_nimrod()
-  let defOut = NimExec("--def")
+fun! StartNimrodThread()
+endf
+
+let g:nimrod_completion_callbacks = {}
+
+fun! NimrodAsyncCmdComplete(cmd, output)
+  call add(g:nimrod_log, a:output)
+  echom g:nimrod_completion_callbacks
+  if has_key(g:nimrod_completion_callbacks, a:cmd)
+    let Callback = get(g:nimrod_completion_callbacks, a:cmd)
+    call Callback(a:output)
+    " remove(g:nimrod_completion_callbacks, a:cmd)
+  else
+    echom "ERROR, Unknown Command: " . a:cmd
+  endif
+  return 1
+endf
+
+fun! GotoDefinition_nimrod_ready(def_output)
   if v:shell_error
     echo "nimrod was unable to locate the definition. exit code: " . v:shell_error
-    " echoerr defOut
+    " echoerr a:def_output
     return 0
   endif
   
-  let rawDef = matchstr(defOut, 'def\t\([^\n]*\)')
+  let rawDef = matchstr(a:def_output, 'def\t\([^\n]*\)')
   if rawDef == ""
     echo "the current cursor position does not match any definitions"
     return 0
@@ -118,13 +152,17 @@ fun! GotoDefinition_nimrod()
   return 1
 endf
 
+fun! GotoDefinition_nimrod()
+  call NimExecAsync("--def", function("GotoDefinition_nimrod_ready"))
+endf
+
 fun! FindReferences_nimrod()
   setloclist()
 endf
 
 " Syntastic syntax checking
 fun! SyntaxCheckers_nimrod_GetLocList()
-  let makeprg = 'nimrod check ' . CurrentNimrodFile()
+  let makeprg = 'nimrod check ' . s:CurrentNimrodFile()
   let errorformat = &errorformat
   
   return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
