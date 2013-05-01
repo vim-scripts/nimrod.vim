@@ -15,13 +15,13 @@ def disable_sigint():
   signal.signal(signal.SIGINT, signal.SIG_IGN)
 
 class NimrodThread(threading.Thread):
-  def __init__(self):
+  def __init__(self, project_path):
     super(NimrodThread, self).__init__()
     self.tasks = Queue.Queue()
     self.responses = Queue.Queue()
     self.nim = subprocess.Popen(
-       ["nimrod", "serve", "--server.type:stdin", "nimrod.nim"],
-       cwd = "/Users/zahary/Projects/nim/compiler",
+       ["nimrod", "serve", "--server.type:stdin", project_path],
+       cwd = os.path.dirname(project_path),
        stdin = subprocess.PIPE,
        stdout = subprocess.PIPE,
        stderr = subprocess.STDOUT,
@@ -73,7 +73,7 @@ def execNimCmd(project, cmd, async = True):
   if projects.has_key(project):
     target = projects[project]
   else:
-    target = NimrodVimThread()
+    target = NimrodVimThread(project)
     projects[project] = target
     target.start()
   
