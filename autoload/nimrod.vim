@@ -1,11 +1,34 @@
 let g:nimrod_log = []
 let s:plugin_path = escape(expand('<sfile>:p:h'), ' \')
 
+if !exists("g:nimrod_caas_enabled")
+  let g:nimrod_caas_enabled = 1
+endif
+
 exe 'pyfile ' . fnameescape(s:plugin_path) . '/nimrod_vim.py'
 
+if !executable('nimrod')
+  echoerr "the nimrod compiler must be in your system's PATH"
+endif
+
 fun! nimrod#init()
-  let b:nimrod_project_root = "/foo"
-  let b:nimrod_caas_enabled = 0
+  let cmd = printf("nimrod --dump.format:json --verbosity:0 dump %s", s:CurrentNimrodFile())
+  let raw_dumpdata = system(cmd)
+  if !v:shell_error
+    " the silent bit is to ignore a warning about trailing characters
+    let dumpdata = eval(substitute(raw_dumpdata, "\n", "", "g"))
+    
+    let b:nimrod_project_root = dumpdata['project_path']
+    let b:nimrod_caas_enabled = g:nimrod_caas_enabled
+
+    for path in dumpdata['lib_paths']
+      if finddir(path) == path
+        let &l:path = path . "," . &l:path
+      endif
+    endfor
+  else
+    let b:nimrod_caas_enabled = 0
+  endif
 endf
 
 fun! s:UpdateNimLog()
@@ -26,6 +49,8 @@ augroup NimLog
   au!
   au BufEnter log://nimrod call s:UpdateNimLog()
 augroup END
+
+command! NimLog :e log://nimrod
 
 fun! s:CurrentNimrodFile()
   let save_cur = getpos('.')
