@@ -201,10 +201,17 @@ fun! FindReferences_nimrod()
 endf
 
 " Syntastic syntax checking
-fun! SyntaxCheckers_nimrod_GetLocList()
+fun! SyntaxCheckers_nimrod_nimrod_GetLocList()
   let makeprg = 'nimrod check ' . s:CurrentNimrodFile()
   let errorformat = &errorformat
   
   return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
 endf
 
+function! SyntaxCheckers_nimrod_nimrod_IsAvailable()
+  return executable("nimrod")
+endfunction
+
+call g:SyntasticRegistry.CreateAndRegisterChecker({
+    \ 'filetype': 'nimrod',
+    \ 'name': 'nimrod'})
