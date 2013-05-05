@@ -5,21 +5,21 @@ if !exists("g:nimrod_caas_enabled")
   let g:nimrod_caas_enabled = 1
 endif
 
-exe 'pyfile ' . fnameescape(s:plugin_path) . '/nimrod_vim.py'
-
 if !executable('nimrod')
   echoerr "the nimrod compiler must be in your system's PATH"
 endif
+
+exe 'pyfile ' . fnameescape(s:plugin_path) . '/nimrod_vim.py'
 
 fun! nimrod#init()
   let cmd = printf("nimrod --dump.format:json --verbosity:0 dump %s", s:CurrentNimrodFile())
   let raw_dumpdata = system(cmd)
   if !v:shell_error
-    " the silent bit is to ignore a warning about trailing characters
     let dumpdata = eval(substitute(raw_dumpdata, "\n", "", "g"))
     
     let b:nimrod_project_root = dumpdata['project_path']
-    let b:nimrod_caas_enabled = g:nimrod_caas_enabled
+    let b:nimrod_defined_symbols = dumpdata['defined_symbols']
+    let b:nimrod_caas_enabled = g:nimrod_caas_enabled || index(dumpdata['defined_symbols'], 'forcecaas') != -1
 
     for path in dumpdata['lib_paths']
       if finddir(path) == path
@@ -42,15 +42,23 @@ fun! s:UpdateNimLog()
 
   let g:nimrod_log = []
 
-  match Search /^nimrod\ idetools.*/
+  match Search /^nimrod\ .*/
 endf
 
-augroup NimLog
+augroup NimrodVim
   au!
   au BufEnter log://nimrod call s:UpdateNimLog()
+  au QuitPre * :py nimTerminateAll()
+  au VimLeavePre * :py nimTerminateAll()
 augroup END
 
 command! NimLog :e log://nimrod
+
+command! NimTerminateService
+  \ :exe printf("py nimTerminateService('%s')", b:nimrod_project_root)
+
+command! NimRestartService
+  \ :exe printf("py nimRestartService('%s')", b:nimrod_project_root)
 
 fun! s:CurrentNimrodFile()
   let save_cur = getpos('.')
@@ -91,19 +99,26 @@ let g:nimrod_symbol_types = {
   \ }
 
 fun! NimExec(op)
-  let cmd = printf("idetools %s --track:\"%s,%d,%d\" \"%s\"",
-              \ a:op, expand('%:p'), line('.'), col('.')-1, s:CurrentNimrodFile())
+  let isDirty = getbufvar(bufnr('%'), "&modified")
+  if isDirty
+    let tmp = tempname() . bufname("%") . "_dirty.nim"
+    silent! exe ":w " . tmp
 
-  if b:nimrod_caas_enabled
-    exe printf("py execNimCmd('%s', '%s', False)", b:nimrod_project_root, cmd)
-    let output = l:py_res
+    let cmd = printf("idetools %s --trackDirty:\"%s,%s,%d,%d\" \"%s\"",
+      \ a:op, tmp, expand('%:p'), line('.'), col('.')-1, s:CurrentNimrodFile())
   else
-    let syscmd = "nimrod " . cmd
-    call add(g:nimrod_log, syscmd)
-    let output = system(syscmd)
+    let cmd = printf("idetools %s --track:\"%s,%d,%d\" \"%s\"",
+      \ a:op, expand('%:p'), line('.'), col('.')-1, s:CurrentNimrodFile())
   endif
 
-  call add(g:nimrod_log, output)
+  if b:nimrod_caas_enabled
+    exe printf("py nimExecCmd('%s', '%s', False)", b:nimrod_project_root, cmd)
+    let output = l:py_res
+  else
+    let output = system("nimrod " . cmd)
+  endif
+
+  call add(g:nimrod_log, "nimrod " . cmd . "\n" . output)
   return output
 endf
 
@@ -113,6 +128,10 @@ fun! NimExecAsync(op, Handler)
 endf
 
 fun! NimComplete(findstart, base)
+  if b:nimrod_caas_enabled == 0
+    return -1
+  endif
+
   if a:findstart
     if synIDattr(synIDtrans(synID(line("."),col("."),1)), "name") == 'Comment'
       return -1
@@ -123,7 +142,7 @@ fun! NimComplete(findstart, base)
     let sugOut = NimExec("--suggest")
     for line in split(sugOut, '\n')
       let lineData = split(line, '\t')
-      if lineData[0] == "sug"
+      if len(lineData) > 0 && lineData[0] == "sug"
         let kind = get(g:nimrod_symbol_types, lineData[1], '')
         let c = { 'word': lineData[2], 'kind': kind, 'menu': lineData[3], 'dup': 1 }
         call add(result, c)
@@ -137,11 +156,7 @@ if !exists("g:neocomplcache_omni_patterns")
   let g:neocomplcache_omni_patterns = {}
 endif
 
-" let g:neocomplcache_omni_patterns['nimrod'] = '[^. *\t]\.\w*'
-
-fun! StartNimrodThread()
-endf
-
+let g:neocomplcache_omni_patterns['nimrod'] = '[^. *\t]\.\w*'
 let g:nimrod_completion_callbacks = {}
 
 fun! NimrodAsyncCmdComplete(cmd, output)

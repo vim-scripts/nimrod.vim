@@ -9,11 +9,6 @@ except ImportError:
   
   vim = Vim()
 
-def disable_sigint():
-  # Ignore the SIGINT signal by setting the handler to the standard
-  # signal handler SIG_IGN.
-  signal.signal(signal.SIGINT, signal.SIG_IGN)
-
 class NimrodThread(threading.Thread):
   def __init__(self, project_path):
     super(NimrodThread, self).__init__()
@@ -26,7 +21,6 @@ class NimrodThread(threading.Thread):
        stdout = subprocess.PIPE,
        stderr = subprocess.STDOUT,
        universal_newlines = True,
-       preexec_fn = disable_sigint,
        bufsize = 1)
  
   def postNimCmd(self, msg, async = True):
@@ -56,32 +50,49 @@ class NimrodThread(threading.Thread):
           break
         
 
-def vimEscapeExpr(expr):
+def nimVimEscape(expr):
   return expr.replace("\\", "\\\\").replace('"', "\\\"").replace("\n", "\\n")
 
 class NimrodVimThread(NimrodThread):
   def asyncOpComplete(self, msg, result):
-    cmd = "/usr/local/bin/mvim --remote-expr 'NimrodAsyncCmdComplete(1, \"" + vimEscapeExpr(result) + "\")'"
+    cmd = "/usr/local/bin/mvim --remote-expr 'NimrodAsyncCmdComplete(1, \"" + nimVimEscape(result) + "\")'"
     os.system (cmd)
 
-projects = {}
+NimProjects = {}
 
-log = open("/tmp/nim-log.txt", "w")
+def nimStartService(project):
+  target = NimrodVimThread(project)
+  NimProjects[project] = target
+  target.start()
+  return target
 
-def execNimCmd(project, cmd, async = True):
+def nimTerminateService(project):
+  if NimProjects.has_key(project):
+    NimProjects[project].postNimCmd("quit")
+    del NimProjects[project]
+
+def nimRestartService(project):
+  nimTerminateService(project)
+  nimStartService(project)
+
+NimLog = open("/tmp/nim-log.txt", "w")
+
+def nimExecCmd(project, cmd, async = True):
   target = None
-  if projects.has_key(project):
-    target = projects[project]
+  if NimProjects.has_key(project):
+    target = NimProjects[project]
   else:
-    target = NimrodVimThread(project)
-    projects[project] = target
-    target.start()
+    target = nimStartService(project)
   
   result = target.postNimCmd(cmd, async)
   if result != None:
-    log.write(result)
-    log.flush()
+    NimLog.write(result)
+    NimLog.flush()
   
   if not async:
-    vim.command('let l:py_res = "' + vimEscapeExpr(result) + '"')
+    vim.command('let l:py_res = "' + nimVimEscape(result) + '"')
 
+def nimTerminateAll():
+  for thread in NimProjects.values():
+    thread.postNimCmd("quit")
+    
