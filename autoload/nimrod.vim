@@ -48,7 +48,7 @@ endf
 augroup NimrodVim
   au!
   au BufEnter log://nimrod call s:UpdateNimLog()
-  au QuitPre * :py nimTerminateAll()
+  " au QuitPre * :py nimTerminateAll()
   au VimLeavePre * :py nimTerminateAll()
 augroup END
 

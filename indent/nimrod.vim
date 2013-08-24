@@ -16,6 +16,18 @@ if exists("*GetNimrodIndent")
   finish
 endif
 
+function! s:FindStartLine(fromln, pattern)
+  let lnum = a:fromln
+  let safechoice = indent(lnum)
+  while getline(lnum) !~ a:pattern
+    if indent(lnum) == 0 || lnum == 1
+      return safechoice
+    endif
+    let lnum = lnum - 1
+  endwhile
+  return indent(lnum)
+endfunction
+
 function! GetNimrodIndent(lnum)
   " Search backwards for the previous non-empty line.
   let plnum = prevnonblank(a:lnum - 1)
@@ -64,11 +76,23 @@ function! GetNimrodIndent(lnum)
       let col = col + 1
     endwhile
   endif
-  
+
   if pline =~ ':\s*$'
-    \ || pline =~ '=\s*$' 
-    \ || pline =~ '\(type\|import\|const\|var\)\s*$'
-    \ || pline =~ '=\s*\(object\|enum\)'
+    "return s:FindStartLine(plnum, '(^\s*\(if\|when\|else\|elif\|case\|of\|try\|except\|finally\)\>)\|\<do\>') + &sw
+    return s:FindStartLine(plnum, '^\s*\(if\|when\|else\|elif\|for\|while\|case\|of\|try\|except\|finally\)\>') + &sw
+  endif
+
+  if pline =~ '=\s*$'
+    return s:FindStartLine(plnum, '^\s*\(proc\|template\|macro\|iterator\)\>') + &sw
+  endif
+
+  " if we got here, this should be the begging of a multi-line if expression for example
+  if pline =~ '^\s*\(if\|when\|proc\|iterator\|macro\|template\|for\|while\)[^:]*$'
+    return plindent + &sw
+  endif
+
+  if pline =~ '\(type\|import\|const\|var\)\s*$'
+    \ || pline =~ '=\s*\(object\|enum\|tuple\|generic\)'
     return plindent + &sw
   endif
 
@@ -101,18 +125,7 @@ function! GetNimrodIndent(lnum)
 
   " If the current line begins with a header keyword, dedent
   if getline(a:lnum) =~ '^\s*\(elif\|else\)\>'
-
-    " Unless the previous line was a one-liner
-    "if getline(plnumstart) =~ '^\s*\(for\|if\|try\)\>'
-      "return plindent
-    "endif
-
-    " Or the user has already dedented
-    if clindent <= plindent - &sw
-      return -1
-    endif
-
-    return plindent - &sw
+    return s:FindStartLine(a:lnum, '^\s*\(if\|when\|elif\|of\)')
   endif
 
   return -1
