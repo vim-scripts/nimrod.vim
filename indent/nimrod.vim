@@ -43,6 +43,7 @@ function! GetNimrodIndent(lnum)
   endif
 
   let pline = getline(plnum)
+  let cline = getline(a:lnum)
   let pline_len = strlen(pline)
   let plindent = indent(plnum)
   let clindent = indent(a:lnum)
@@ -77,6 +78,32 @@ function! GetNimrodIndent(lnum)
     endwhile
   endif
 
+  if cline =~ '^\s*\(if\|when\|for\|while\|case\|of\|try\)\>'
+    " This is a benign line, do nothing
+    return -1
+  endif
+
+  " If the current line begins with a keyword that lines up with "try"
+  if cline =~ '^\s*\(except\|finally\)\>'
+    let lnum = a:lnum - 1
+    while lnum >= 1
+      if getline(lnum) =~ '^\s*\(try\|except\)\>'
+        let ind = indent(lnum)
+        if ind >= clindent
+          return -1     " indent is already less than this
+        endif
+        return ind      " line up with previous try or except
+      endif
+      let lnum = lnum - 1
+    endwhile
+    return -1           " no matching "try"!
+  endif
+
+  " If the current line begins with a header keyword, dedent
+  if cline =~ '^\s*\(elif\|else\)\>'
+    return s:FindStartLine(a:lnum, '^\s*\(if\|when\|elif\|of\)')
+  endif
+
   if pline =~ ':\s*$'
     "return s:FindStartLine(plnum, '(^\s*\(if\|when\|else\|elif\|case\|of\|try\|except\|finally\)\>)\|\<do\>') + &sw
     return s:FindStartLine(plnum, '^\s*\(if\|when\|else\|elif\|for\|while\|case\|of\|try\|except\|finally\)\>') + &sw
@@ -105,27 +132,6 @@ function! GetNimrodIndent(lnum)
     endif
     " Otherwise, trust the user
     return -1
-  endif
-
-  " If the current line begins with a keyword that lines up with "try"
-  if getline(a:lnum) =~ '^\s*\(except\|finally\)\>'
-    let lnum = a:lnum - 1
-    while lnum >= 1
-      if getline(lnum) =~ '^\s*\(try\|except\)\>'
-        let ind = indent(lnum)
-        if ind >= clindent
-          return -1     " indent is already less than this
-        endif
-        return ind      " line up with previous try or except
-      endif
-      let lnum = lnum - 1
-    endwhile
-    return -1           " no matching "try"!
-  endif
-
-  " If the current line begins with a header keyword, dedent
-  if getline(a:lnum) =~ '^\s*\(elif\|else\)\>'
-    return s:FindStartLine(a:lnum, '^\s*\(if\|when\|elif\|of\)')
   endif
 
   return -1
