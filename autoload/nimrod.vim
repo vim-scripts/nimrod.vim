@@ -218,3 +218,11 @@ if exists("g:SyntasticRegistry")
       \ 'name': 'nimrod'})
 endif
 
+if !exists("g:quickrun_config")
+  let g:quickrun_config = {}
+endif
+
+if !exists("g:quickrun_config.nimrod")
+  let g:quickrun_config.nimrod = { "exec": "nimrod c --run --verbosity:0 %S" }
+endif
+
