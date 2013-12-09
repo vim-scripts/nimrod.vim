@@ -38,7 +38,7 @@ syn keyword nimrodKeyword       finally for from
 syn keyword nimrodKeyword       generic
 syn keyword nimrodKeyword       if import in include interface is isnot iterator
 syn keyword nimrodKeyword       lambda let
-syn keyword nimrodKeyword       mixin mod
+syn keyword nimrodKeyword       mixin using mod
 syn keyword nimrodKeyword       nil not notin
 syn keyword nimrodKeyword       object of or out
 syn keyword nimrodKeyword       proc method macro template nextgroup=nimrodFunction skipwhite

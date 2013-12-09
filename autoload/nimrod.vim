@@ -212,6 +212,9 @@ function! SyntaxCheckers_nimrod_nimrod_IsAvailable()
   return executable("nimrod")
 endfunction
 
-call g:SyntasticRegistry.CreateAndRegisterChecker({
-    \ 'filetype': 'nimrod',
-    \ 'name': 'nimrod'})
+if exists("g:SyntasticRegistry")
+  call g:SyntasticRegistry.CreateAndRegisterChecker({
+      \ 'filetype': 'nimrod',
+      \ 'name': 'nimrod'})
+endif
+
