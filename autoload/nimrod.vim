@@ -202,7 +202,7 @@ endf
 
 " Syntastic syntax checking
 fun! SyntaxCheckers_nimrod_nimrod_GetLocList()
-  let makeprg = 'nimrod check ' . s:CurrentNimrodFile()
+  let makeprg = 'nimrod check --hints:off ' . s:CurrentNimrodFile()
   let errorformat = &errorformat
   
   return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
