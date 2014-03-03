@@ -14,10 +14,10 @@ modified python.vim (http://www.vim.org/scripts/script.php?script_id=790).
 
 #Installation
 
+Installing `nimrod.vim` is easy but first you need to have either pathogen plugin or vundle
+installed.  If you already have one working then skip to the [final step](README.markdown#final-step)
+
 ##Pathogen
-Installing `nimrod.vim` is easy but first you need to have the pathogen plugin
-installed.  If you already have pathogen working then skip Step 1 and go to
-Step 2.
 
 ###Step 1: Install pathogen.vim
 
@@ -53,7 +53,7 @@ Add the vundle script to your vim:
   
     git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
     
-Modify your ~/.vimrc to get vundle running, lightly adapted from https://github.com/gmarik/Vundle.vim/blob/master/README.md
+Modify your ~/.vimrc to get vundle running, lightly adapted from [Vundle's readme](https://github.com/gmarik/Vundle.vim/blob/master/README.md)
 
     set nocompatible              " be iMproved, required
     filetype off                  " required
