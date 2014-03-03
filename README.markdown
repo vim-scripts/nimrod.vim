@@ -1,5 +1,4 @@
-Nimrod language support for Vim
--------------------------------
+#Nimrod language support for Vim
 
 This provides [Nimrod](http://nimrod-code.org) language support for Vim:
 
@@ -13,15 +12,14 @@ The source of this script comes mainly from
 http://www.vim.org/scripts/script.php?script_id=2632, which comes from a
 modified python.vim (http://www.vim.org/scripts/script.php?script_id=790).
 
-Installation
-------------
+#Installation
 
-Installing `nimrod.vim` is easy but first you need to have the pathogen plugin
-installed.  If you already have pathogen working then skip Step 1 and go to
-Step 2.
+Installing `nimrod.vim` is easy but first you need to have either pathogen plugin or vundle
+installed.  If you already have one working then skip to the [final step](README.markdown#final-step)
 
-Step 1: Install pathogen.vim
-----------------------------
+##Pathogen
+
+###Step 1: Install pathogen.vim
 
 First I'll show you how to install tpope's
 [pathogen.vim](https://github.com/tpope/vim-pathogen) so that it's easy to
@@ -36,8 +34,7 @@ Next you *need to add this* to your `~/.vimrc`:
 
     call pathogen#infect()
 
-Step 2: Install nimrod.vim as a pathogen bundle
------------------------------------------------
+###Step 2: Install nimrod.vim as a pathogen bundle
 
 You now have pathogen installed and can put `nimrod.vim` into `~/.vim/bundle`
 like this:
@@ -45,6 +42,41 @@ like this:
     cd ~/.vim/bundle
     git clone git://github.com/zah/nimrod.vim.git
 
+##Vundle
+  
+Vundle is a more automatic way to install vim plugins that works by cloning 
+the git reposotory.
+  
+###Step 1: Install Vundle
+  
+Add the vundle script to your vim:
+  
+    git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+    
+Modify your ~/.vimrc to get vundle running, lightly adapted from [Vundle's readme](https://github.com/gmarik/Vundle.vim/blob/master/README.md)
+
+    set nocompatible              " be iMproved, required
+    filetype off                  " required
+    
+    " set the runtime path to include Vundle and initialize
+    set rtp+=~/.vim/bundle/vundle/
+    call vundle#rc()
+    " alternatively, pass a path where Vundle should install bundles
+    "let path = '~/some/path/here'
+    "call vundle#rc(path)
+    
+    " let Vundle manage Vundle, required
+    Bundle 'gmarik/vundle'
+    
+    filetype plugin indent on     " required
+    
+###Step 2: Install nimrod.vim
+
+On the line after `Bundle 'gmarik/vundle'`, add `Bundle 'zah/nimrod.vim'`.
+Save `~/.vimrc` and restart vim. Execute `:BundleInstall` and wait for nimrod.vim
+to be installed.
+
+##Final Step
 Next you *need to add this* to your `~/.vimrc`:
 
     fun! JumpToDef()
@@ -64,15 +96,13 @@ compiler with the appropriate idetools command. Pressing meta+g will then jump
 to the definition of the word your cursor is on. This uses the nimrod compiler
 instead of ctags, so it works on any nimrod file which is compilable without
 requiring you to maintain a database file.
-
-Other recomended Vim plugins
-----------------------------
+  
+#Other recomended Vim plugins
 
 * https://github.com/scrooloose/syntastic (copied bits from its readme)
 * https://github.com/Shougo/neocomplcache
 
-If something goes wrong
------------------------
+#If something goes wrong
 
 Since you are using vim, on source code which might have syntax problems,
 invoking an external tool which may have its own share of bugs, sometimes stuff
