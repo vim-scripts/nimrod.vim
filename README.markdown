@@ -15,7 +15,8 @@ modified python.vim (http://www.vim.org/scripts/script.php?script_id=790).
 #Installation
 
 Installing `nimrod.vim` is easy but first you need to have either pathogen plugin or vundle
-installed.  If you already have one working then skip to the [final step](README.markdown#final-step)
+installed.  If you already have one working then skip to the [final step](README.markdown#final-step).
+It is also recommened that you use the [syntastic](https://github.com/scrooloose/syntastic) plugin for best results.
 
 ##Pathogen
 
@@ -41,6 +42,10 @@ like this:
 
     cd ~/.vim/bundle
     git clone git://github.com/zah/nimrod.vim.git
+    
+You may also want to install synastic by calling 
+
+    git clone https://github.com/scrooloose/syntastic.git
 
 ##Vundle
   
@@ -72,9 +77,9 @@ Modify your ~/.vimrc to get vundle running, lightly adapted from [Vundle's readm
     
 ###Step 2: Install nimrod.vim
 
-On the line after `Bundle 'gmarik/vundle'`, add `Bundle 'zah/nimrod.vim'`.
-Save `~/.vimrc` and restart vim. Execute `:BundleInstall` and wait for nimrod.vim
-to be installed.
+On the line after `Bundle 'gmarik/vundle'`, add `Bundle 'zah/nimrod.vim'`. You may also want
+to add `Bundle 'scrooloose/syntastic'`. Save `~/.vimrc` and restart vim. Execute `:BundleInstall`
+and wait for nimrod.vim to be installed.
 
 ##Final Step
 Next you *need to add this* to your `~/.vimrc`:
