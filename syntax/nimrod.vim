@@ -185,4 +185,3 @@ endif
 
 let b:current_syntax = "nimrod"
 
-setlocal expandtab  "Make sure that only spaces are used
