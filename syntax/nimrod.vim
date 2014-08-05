@@ -126,7 +126,8 @@ if nimrod_highlight_exceptions == 1
   syn keyword nimrodException EInvalidObject EInvalidLibrary EInvalidKey
   syn keyword nimrodException EInvalidObjectConversion EFloatingPoint
   syn keyword nimrodException EFloatInvalidOp EFloatDivByZero EFloatOverflow
-  syn keyword nimrodException EFloatInexact EDeadThread
+  syn keyword nimrodException EFloatInexact EDeadThread EResourceExhausted
+  syn keyword nimrodException EFloatUnderflow
 endif
 
 if nimrod_highlight_space_errors == 1
