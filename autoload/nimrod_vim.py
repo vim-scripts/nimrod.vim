@@ -9,13 +9,13 @@ except ImportError:
   
   vim = Vim()
 
-class NimrodThread(threading.Thread):
+class NimThread(threading.Thread):
   def __init__(self, project_path):
-    super(NimrodThread, self).__init__()
+    super(NimThread, self).__init__()
     self.tasks = Queue.Queue()
     self.responses = Queue.Queue()
     self.nim = subprocess.Popen(
-       ["nimrod", "serve", "--server.type:stdin", project_path],
+       ["nim", "serve", "--server.type:stdin", project_path],
        cwd = os.path.dirname(project_path),
        stdin = subprocess.PIPE,
        stdout = subprocess.PIPE,
@@ -53,15 +53,15 @@ class NimrodThread(threading.Thread):
 def nimVimEscape(expr):
   return expr.replace("\\", "\\\\").replace('"', "\\\"").replace("\n", "\\n")
 
-class NimrodVimThread(NimrodThread):
+class NimVimThread(NimThread):
   def asyncOpComplete(self, msg, result):
-    cmd = "/usr/local/bin/mvim --remote-expr 'NimrodAsyncCmdComplete(1, \"" + nimVimEscape(result) + "\")'"
+    cmd = "/usr/local/bin/mvim --remote-expr 'NimAsyncCmdComplete(1, \"" + nimVimEscape(result) + "\")'"
     os.system (cmd)
 
 NimProjects = {}
 
 def nimStartService(project):
-  target = NimrodVimThread(project)
+  target = NimVimThread(project)
   NimProjects[project] = target
   target.start()
   return target

@@ -1,25 +1,25 @@
-let g:nimrod_log = []
+let g:nim_log = []
 let s:plugin_path = escape(expand('<sfile>:p:h'), ' \')
 
-if !exists("g:nimrod_caas_enabled")
-  let g:nimrod_caas_enabled = 1
+if !exists("g:nim_caas_enabled")
+  let g:nim_caas_enabled = 1
 endif
 
-if !executable('nimrod')
-  echoerr "the nimrod compiler must be in your system's PATH"
+if !executable('nim')
+  echoerr "the Nim compiler must be in your system's PATH"
 endif
 
-exe 'pyfile ' . fnameescape(s:plugin_path) . '/nimrod_vim.py'
+exe 'pyfile ' . fnameescape(s:plugin_path) . '/nim_vim.py'
 
-fun! nimrod#init()
-  let cmd = printf("nimrod --dump.format:json --verbosity:0 dump %s", s:CurrentNimrodFile())
+fun! nim#init()
+  let cmd = printf("nim --dump.format:json --verbosity:0 dump %s", s:CurrentNimFile())
   let raw_dumpdata = system(cmd)
   if !v:shell_error
     let dumpdata = eval(substitute(raw_dumpdata, "\n", "", "g"))
     
-    let b:nimrod_project_root = dumpdata['project_path']
-    let b:nimrod_defined_symbols = dumpdata['defined_symbols']
-    let b:nimrod_caas_enabled = g:nimrod_caas_enabled || index(dumpdata['defined_symbols'], 'forcecaas') != -1
+    let b:nim_project_root = dumpdata['project_path']
+    let b:nim_defined_symbols = dumpdata['defined_symbols']
+    let b:nim_caas_enabled = g:nim_caas_enabled || index(dumpdata['defined_symbols'], 'forcecaas') != -1
 
     for path in dumpdata['lib_paths']
       if finddir(path) == path
@@ -27,7 +27,7 @@ fun! nimrod#init()
       endif
     endfor
   else
-    let b:nimrod_caas_enabled = 0
+    let b:nim_caas_enabled = 0
   endif
 endf
 
@@ -36,31 +36,31 @@ fun! s:UpdateNimLog()
   setlocal bufhidden=hide
   setlocal noswapfile
 
-  for entry in g:nimrod_log
+  for entry in g:nim_log
     call append(line('$'), split(entry, "\n"))
   endfor
 
-  let g:nimrod_log = []
+  let g:nim_log = []
 
-  match Search /^nimrod\ .*/
+  match Search /^nim\ .*/
 endf
 
-augroup NimrodVim
+augroup NimVim
   au!
-  au BufEnter log://nimrod call s:UpdateNimLog()
+  au BufEnter log://nim call s:UpdateNimLog()
   " au QuitPre * :py nimTerminateAll()
   au VimLeavePre * :py nimTerminateAll()
 augroup END
 
-command! NimLog :e log://nimrod
+command! NimLog :e log://nim
 
 command! NimTerminateService
-  \ :exe printf("py nimTerminateService('%s')", b:nimrod_project_root)
+  \ :exe printf("py nimTerminateService('%s')", b:nim_project_root)
 
 command! NimRestartService
-  \ :exe printf("py nimRestartService('%s')", b:nimrod_project_root)
+  \ :exe printf("py nimRestartService('%s')", b:nim_project_root)
 
-fun! s:CurrentNimrodFile()
+fun! s:CurrentNimFile()
   let save_cur = getpos('.')
   call cursor(0, 0, 0)
   
@@ -78,7 +78,7 @@ fun! s:CurrentNimrodFile()
   return l:to_check
 endf
 
-let g:nimrod_symbol_types = {
+let g:nim_symbol_types = {
   \ 'skParam': 'v',
   \ 'skVar': 'v',
   \ 'skLet': 'v',
@@ -105,20 +105,20 @@ fun! NimExec(op)
     silent! exe ":w " . tmp
 
     let cmd = printf("idetools %s --trackDirty:\"%s,%s,%d,%d\" \"%s\"",
-      \ a:op, tmp, expand('%:p'), line('.'), col('.')-1, s:CurrentNimrodFile())
+      \ a:op, tmp, expand('%:p'), line('.'), col('.')-1, s:CurrentNimFile())
   else
     let cmd = printf("idetools %s --track:\"%s,%d,%d\" \"%s\"",
-      \ a:op, expand('%:p'), line('.'), col('.')-1, s:CurrentNimrodFile())
+      \ a:op, expand('%:p'), line('.'), col('.')-1, s:CurrentNimFile())
   endif
 
-  if b:nimrod_caas_enabled
-    exe printf("py nimExecCmd('%s', '%s', False)", b:nimrod_project_root, cmd)
+  if b:nim_caas_enabled
+    exe printf("py nimExecCmd('%s', '%s', False)", b:nim_project_root, cmd)
     let output = l:py_res
   else
-    let output = system("nimrod " . cmd)
+    let output = system("nim " . cmd)
   endif
 
-  call add(g:nimrod_log, "nimrod " . cmd . "\n" . output)
+  call add(g:nim_log, "nim " . cmd . "\n" . output)
   return output
 endf
 
@@ -128,7 +128,7 @@ fun! NimExecAsync(op, Handler)
 endf
 
 fun! NimComplete(findstart, base)
-  if b:nimrod_caas_enabled == 0
+  if b:nim_caas_enabled == 0
     return -1
   endif
 
@@ -143,7 +143,7 @@ fun! NimComplete(findstart, base)
     for line in split(sugOut, '\n')
       let lineData = split(line, '\t')
       if len(lineData) > 0 && lineData[0] == "sug"
-        let kind = get(g:nimrod_symbol_types, lineData[1], '')
+        let kind = get(g:nim_symbol_types, lineData[1], '')
         let c = { 'word': lineData[2], 'kind': kind, 'menu': lineData[3], 'dup': 1 }
         call add(result, c)
       endif
@@ -156,25 +156,25 @@ if !exists("g:neocomplcache_omni_patterns")
   let g:neocomplcache_omni_patterns = {}
 endif
 
-let g:neocomplcache_omni_patterns['nimrod'] = '[^. *\t]\.\w*'
-let g:nimrod_completion_callbacks = {}
+let g:neocomplcache_omni_patterns['nim'] = '[^. *\t]\.\w*'
+let g:nim_completion_callbacks = {}
 
-fun! NimrodAsyncCmdComplete(cmd, output)
-  call add(g:nimrod_log, a:output)
-  echom g:nimrod_completion_callbacks
-  if has_key(g:nimrod_completion_callbacks, a:cmd)
-    let Callback = get(g:nimrod_completion_callbacks, a:cmd)
+fun! NimAsyncCmdComplete(cmd, output)
+  call add(g:nim_log, a:output)
+  echom g:nim_completion_callbacks
+  if has_key(g:nim_completion_callbacks, a:cmd)
+    let Callback = get(g:nim_completion_callbacks, a:cmd)
     call Callback(a:output)
-    " remove(g:nimrod_completion_callbacks, a:cmd)
+    " remove(g:nim_completion_callbacks, a:cmd)
   else
     echom "ERROR, Unknown Command: " . a:cmd
   endif
   return 1
 endf
 
-fun! GotoDefinition_nimrod_ready(def_output)
+fun! GotoDefinition_nim_ready(def_output)
   if v:shell_error
-    echo "nimrod was unable to locate the definition. exit code: " . v:shell_error
+    echo "nim was unable to locate the definition. exit code: " . v:shell_error
     " echoerr a:def_output
     return 0
   endif
@@ -192,37 +192,37 @@ fun! GotoDefinition_nimrod_ready(def_output)
   return 1
 endf
 
-fun! GotoDefinition_nimrod()
-  call NimExecAsync("--def", function("GotoDefinition_nimrod_ready"))
+fun! GotoDefinition_nim()
+  call NimExecAsync("--def", function("GotoDefinition_nim_ready"))
 endf
 
-fun! FindReferences_nimrod()
+fun! FindReferences_nim()
   setloclist()
 endf
 
 " Syntastic syntax checking
-fun! SyntaxCheckers_nimrod_nimrod_GetLocList()
-  let makeprg = 'nimrod check --hints:off ' . s:CurrentNimrodFile()
+fun! SyntaxCheckers_nim_nim_GetLocList()
+  let makeprg = 'nim check --hints:off ' . s:CurrentNimFile()
   let errorformat = &errorformat
   
   return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
 endf
 
-function! SyntaxCheckers_nimrod_nimrod_IsAvailable()
-  return executable("nimrod")
+function! SyntaxCheckers_nim_nim_IsAvailable()
+  return executable("nim")
 endfunction
 
 if exists("g:SyntasticRegistry")
   call g:SyntasticRegistry.CreateAndRegisterChecker({
-      \ 'filetype': 'nimrod',
-      \ 'name': 'nimrod'})
+      \ 'filetype': 'nim',
+      \ 'name': 'nim'})
 endif
 
 if !exists("g:quickrun_config")
   let g:quickrun_config = {}
 endif
 
-if !exists("g:quickrun_config.nimrod")
-  let g:quickrun_config.nimrod = { "exec": "nimrod c --run --verbosity:0 %S" }
+if !exists("g:quickrun_config.nim")
+  let g:quickrun_config.nim = { "exec": "nim c --run --verbosity:0 %S" }
 endif
 

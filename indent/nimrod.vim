@@ -8,11 +8,11 @@ let b:did_indent = 1
 setlocal nolisp         " Make sure lisp indenting doesn't supersede us
 setlocal autoindent     " indentexpr isn't much help otherwise
 
-setlocal indentexpr=GetNimrodIndent(v:lnum)
+setlocal indentexpr=GetNimIndent(v:lnum)
 setlocal indentkeys=!^F,o,O,<:>,0),0],0},=elif
 
 " Only define the function once.
-if exists("*GetNimrodIndent")
+if exists("*GetNimIndent")
   finish
 endif
 
@@ -28,7 +28,7 @@ function! s:FindStartLine(fromln, pattern)
   return indent(lnum)
 endfunction
 
-function! GetNimrodIndent(lnum)
+function! GetNimIndent(lnum)
   " Search backwards for the previous non-empty line.
   let plnum = prevnonblank(a:lnum - 1)
 

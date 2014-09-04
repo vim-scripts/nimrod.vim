@@ -1,2 +1,2 @@
-au BufNewFile,BufRead *.nim set filetype=nimrod
+au BufNewFile,BufRead *.nim set filetype=nim
 
