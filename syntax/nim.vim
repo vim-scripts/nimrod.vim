@@ -113,6 +113,8 @@ if nim_highlight_builtins == 1
   syn keyword nimBuiltin getFileSize ReadBytes ReadChars readBuffer writeBytes
   syn keyword nimBuiltin writeChars writeBuffer setFilePos getFilePos
   syn keyword nimBuiltin fileHandle countdown countup items lines
+  syn keyword nimBuiltin FileMode File RootObj FileHandle ByteAddress Endianness
+  syn keyword nimBuiltin GC_Strategy
 endif
 
 if nim_highlight_exceptions == 1
