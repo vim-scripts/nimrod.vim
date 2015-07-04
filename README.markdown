@@ -1,6 +1,6 @@
 #Nim language support for Vim
 
-This provides [Nim](http://nimrod-code.org) language support for Vim:
+This provides [Nim](http://nim-lang.org) language support for Vim:
 
 * Syntax highlighting
 * Auto-indent
@@ -14,7 +14,7 @@ modified python.vim (http://www.vim.org/scripts/script.php?script_id=790).
 
 #Installation
 
-Installing `nimrod.vim` is easy but first you need to have either pathogen plugin or vundle
+Installing `nim.vim` is easy but first you need to have either pathogen plugin or vundle
 installed.  If you already have one working then skip to the [final step](README.markdown#final-step).
 It is also recommened that you use the [syntastic](https://github.com/scrooloose/syntastic) plugin for best results.
 
@@ -41,7 +41,7 @@ You now have pathogen installed and can put `nimrod.vim` into `~/.vim/bundle`
 like this:
 
     cd ~/.vim/bundle
-    git clone git://github.com/zah/nimrod.vim.git
+    git clone git://github.com/zah/nim.vim.git
     
 You may also want to install synastic by calling 
 
@@ -75,9 +75,9 @@ Modify your ~/.vimrc to get vundle running, lightly adapted from [Vundle's readm
     
     filetype plugin indent on     " required
     
-###Step 2: Install nimrod.vim
+###Step 2: Install nim.vim
 
-On the line after `Bundle 'gmarik/vundle'`, add `Bundle 'zah/nimrod.vim'`. You may also want
+On the line after `Bundle 'gmarik/vundle'`, add `Bundle 'zah/nim.vim'`. You may also want
 to add `Bundle 'scrooloose/syntastic'`. Save `~/.vimrc` and restart vim. Execute `:BundleInstall`
 and wait for nimrod.vim to be installed.
 
