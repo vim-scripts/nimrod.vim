@@ -1,4 +1,4 @@
-import threading, Queue, subprocess, signal, os
+import threading, Queue, subprocess, signal, os, platform, getpass
 
 try:
   import vim
@@ -75,7 +75,12 @@ def nimRestartService(project):
   nimTerminateService(project)
   nimStartService(project)
 
-NimLog = open("/tmp/nim-log.txt", "w")
+NimLog = None
+if platform.system() == 'Windows':
+  user = getpass.getuser()
+  NimLog = open("C:\\Users\\%s\\AppData\\Local\\Temp\\nim-log.txt" % (user,), "w")
+else:
+  NimLog = open("/tmp/nim-log.txt", "w")
 
 def nimExecCmd(project, cmd, async = True):
   target = None
