@@ -31,13 +31,13 @@ syn region nimBrackets       contained extend keepend matchgroup=Bold start=+\(\
 
 syn keyword nimKeyword       addr and as asm atomic
 syn keyword nimKeyword       bind block break
-syn keyword nimKeyword       case cast const continue converter
-syn keyword nimKeyword       discard distinct div do
+syn keyword nimKeyword       case cast concept const continue converter
+syn keyword nimKeyword       defer discard distinct div do
 syn keyword nimKeyword       elif else end enum except export
-syn keyword nimKeyword       finally for from
+syn keyword nimKeyword       finally for from func
 syn keyword nimKeyword       generic
 syn keyword nimKeyword       if import in include interface is isnot iterator
-syn keyword nimKeyword       lambda let
+syn keyword nimKeyword       let
 syn keyword nimKeyword       mixin using mod
 syn keyword nimKeyword       nil not notin
 syn keyword nimKeyword       object of or out
@@ -57,6 +57,7 @@ syn keyword nimRepeat        for while
 syn keyword nimConditional   if elif else case of
 syn keyword nimOperator      and in is not or xor shl shr div
 syn match   nimComment       "#.*$" contains=nimTodo,@Spell
+syn region  nimComment       start="#\[" end="\]#" contains=nimTodo,@Spell
 syn keyword nimTodo          TODO FIXME XXX contained
 syn keyword nimBoolean       true false
 
