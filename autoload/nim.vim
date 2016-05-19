@@ -155,8 +155,13 @@ endf
 if !exists("g:neocomplcache_omni_patterns")
   let g:neocomplcache_omni_patterns = {}
 endif
-
 let g:neocomplcache_omni_patterns['nim'] = '[^. *\t]\.\w*'
+
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+let g:neocomplete#sources#omni#input_patterns['nim'] = '[^. *\t]\.\w*'
+
 let g:nim_completion_callbacks = {}
 
 fun! NimAsyncCmdComplete(cmd, output)
