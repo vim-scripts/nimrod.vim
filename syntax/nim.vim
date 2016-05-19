@@ -92,11 +92,9 @@ if nim_highlight_builtins == 1
   " builtin functions, types and objects, not really part of the syntax
   syn keyword nimBuiltin int int8 int16 int32 int64 uint uint8 uint16 uint32 uint64 float float32 float64 bool
   syn keyword nimBuiltin char string cstring pointer range array openarray seq
-  syn keyword nimBuiltin set Byte Natural Positive TObject PObject Conversion TResult TAddress
+  syn keyword nimBuiltin set Byte Natural Positive Conversion
   syn keyword nimBuiltin BiggestInt BiggestFloat cchar cschar cshort cint csize cuchar cushort
   syn keyword nimBuiltin clong clonglong cfloat cdouble clongdouble cuint culong culonglong cchar
-  syn keyword nimBuiltin cstringArray TEndian PFloat32 PFloat64 PInt64 PInt32
-  syn keyword nimBuiltin TGC_Strategy TFile TFileMode TFileHandle isMainModule
   syn keyword nimBuiltin CompileDate CompileTime nimVersion nimMajor
   syn keyword nimBuiltin nimMinor nimPatch cpuEndian hostOS hostCPU inf
   syn keyword nimBuiltin neginf nan QuitSuccess QuitFailure dbgLineHook stdin
@@ -110,7 +108,7 @@ if nim_highlight_builtins == 1
   syn keyword nimBuiltin swap getRefcount getCurrentException Msg
   syn keyword nimBuiltin getOccupiedMem getFreeMem getTotalMem isNil seqToPtr
   syn keyword nimBuiltin find pop GC_disable GC_enable GC_fullCollect
-  syn keyword nimBuiltin GC_setStrategy GC_enableMarkAnd Sweep
+  syn keyword nimBuiltin GC_setStrategy GC_enableMarkAndSweep GC_Strategy
   syn keyword nimBuiltin GC_disableMarkAnd Sweep GC_getStatistics GC_ref
   syn keyword nimBuiltin GC_ref GC_ref GC_unref GC_unref GC_unref quit
   syn keyword nimBuiltin OpenFile OpenFile CloseFile EndOfFile readChar
@@ -119,7 +117,6 @@ if nim_highlight_builtins == 1
   syn keyword nimBuiltin writeChars writeBuffer setFilePos getFilePos
   syn keyword nimBuiltin fileHandle countdown countup items lines
   syn keyword nimBuiltin FileMode File RootObj FileHandle ByteAddress Endianness
-  syn keyword nimBuiltin GC_Strategy
 endif
 
 if nim_highlight_exceptions == 1
