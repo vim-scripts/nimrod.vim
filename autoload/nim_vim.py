@@ -75,13 +75,6 @@ def nimRestartService(project):
   nimTerminateService(project)
   nimStartService(project)
 
-NimLog = None
-if platform.system() == 'Windows':
-  user = getpass.getuser()
-  NimLog = open("C:\\Users\\%s\\AppData\\Local\\Temp\\nim-log.txt" % (user,), "w")
-else:
-  NimLog = open("/tmp/nim-log.txt", "w")
-
 def nimExecCmd(project, cmd, async = True):
   target = None
   if NimProjects.has_key(project):
@@ -90,9 +83,6 @@ def nimExecCmd(project, cmd, async = True):
     target = nimStartService(project)
   
   result = target.postNimCmd(cmd, async)
-  if result != None:
-    NimLog.write(result)
-    NimLog.flush()
   
   if not async:
     vim.command('let l:py_res = "' + nimVimEscape(result) + '"')
