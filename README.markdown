@@ -14,7 +14,7 @@ modified python.vim (http://www.vim.org/scripts/script.php?script_id=790).
 
 #Installation
 
-Installing `nimrod.vim` is easy but first you need to have either pathogen plugin or vundle
+Installing `nim.vim` is easy but first you need to have either pathogen plugin or vundle
 installed.  If you already have one working then skip to the [final step](README.markdown#final-step).
 It is also recommened that you use the [syntastic](https://github.com/scrooloose/syntastic) plugin for best results.
 
@@ -75,11 +75,11 @@ Modify your ~/.vimrc to get vundle running, lightly adapted from [Vundle's readm
     
     filetype plugin indent on     " required
     
-###Step 2: Install nimrod.vim
+###Step 2: Install nim.vim
 
-On the line after `Bundle 'gmarik/vundle'`, add `Bundle 'zah/nimrod.vim'`. You may also want
+On the line after `Bundle 'gmarik/vundle'`, add `Bundle 'zah/nim.vim'`. You may also want
 to add `Bundle 'scrooloose/syntastic'`. Save `~/.vimrc` and restart vim. Execute `:BundleInstall`
-and wait for nimrod.vim to be installed.
+and wait for nim.vim to be installed.
 
 ##Final Step
 Next you *need to add this* to your `~/.vimrc`:
@@ -96,9 +96,9 @@ Next you *need to add this* to your `~/.vimrc`:
     nn <M-g> :call JumpToDef()<cr>
     ino <M-g> <esc>:call JumpToDef()<cr>i
 
-The `JumpToDef` function hooks the `nimrod.vim` plugin to invoke the nimrod
+The `JumpToDef` function hooks the `nim.vim` plugin to invoke the nim
 compiler with the appropriate idetools command. Pressing meta+g will then jump
-to the definition of the word your cursor is on. This uses the nimrod compiler
+to the definition of the word your cursor is on. This uses the nim compiler
 instead of ctags, so it works on any nimrod file which is compilable without
 requiring you to maintain a database file.
   
@@ -112,8 +112,8 @@ requiring you to maintain a database file.
 Since you are using vim, on source code which might have syntax problems,
 invoking an external tool which may have its own share of bugs, sometimes stuff
 just doesn't work as expected. In these situations if you want to debug the
-issue you can type ``:e log://nimrod`` and a buffer will open with the log of
-the plugin's invocations and nimrod's idetool answers.
+issue you can type ``:e log://nim`` and a buffer will open with the log of
+the plugin's invocations and nim's idetool answers.
 
 This can give you a hint of where the problem is and allow you to easily
 reproduce on the commandline the idetool parameters the vim plugin is
