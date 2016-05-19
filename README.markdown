@@ -1,6 +1,6 @@
 #Nim language support for Vim
 
-This provides [Nim](http://nimrod-code.org) language support for Vim:
+This provides [Nim](http://nim-lang.org) language support for Vim:
 
 * Syntax highlighting
 * Auto-indent
@@ -41,7 +41,7 @@ You now have pathogen installed and can put `nimrod.vim` into `~/.vim/bundle`
 like this:
 
     cd ~/.vim/bundle
-    git clone git://github.com/zah/nimrod.vim.git
+    git clone git://github.com/zah/nim.vim.git
     
 You may also want to install synastic by calling 
 
