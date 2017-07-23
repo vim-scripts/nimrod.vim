@@ -1,4 +1,4 @@
-#Nim language support for Vim
+# Nim language support for Vim
 
 This provides [Nim](http://nim-lang.org) language support for Vim:
 
@@ -12,15 +12,15 @@ The source of this script comes mainly from
 http://www.vim.org/scripts/script.php?script_id=2632, which comes from a
 modified python.vim (http://www.vim.org/scripts/script.php?script_id=790).
 
-#Installation
+# Installation
 
 Installing `nim.vim` is easy but first you need to have either pathogen plugin or vundle
 installed.  If you already have one working then skip to the [final step](README.markdown#final-step).
 It is also recommened that you use the [syntastic](https://github.com/scrooloose/syntastic) plugin for best results.
 
-##Pathogen
+## Pathogen
 
-###Step 1: Install pathogen.vim
+### Step 1: Install pathogen.vim
 
 First I'll show you how to install tpope's
 [pathogen.vim](https://github.com/tpope/vim-pathogen) so that it's easy to
@@ -35,7 +35,7 @@ Next you *need to add this* to your `~/.vimrc`:
 
     call pathogen#infect()
 
-###Step 2: Install nimrod.vim as a pathogen bundle
+### Step 2: Install nimrod.vim as a pathogen bundle
 
 You now have pathogen installed and can put `nimrod.vim` into `~/.vim/bundle`
 like this:
@@ -47,12 +47,12 @@ You may also want to install synastic by calling
 
     git clone https://github.com/scrooloose/syntastic.git
 
-##Vundle
+## Vundle
   
 Vundle is a more automatic way to install vim plugins that works by cloning 
 the git reposotory.
   
-###Step 1: Install Vundle
+### Step 1: Install Vundle
   
 Add the vundle script to your vim:
   
@@ -75,13 +75,13 @@ Modify your ~/.vimrc to get vundle running, lightly adapted from [Vundle's readm
     
     filetype plugin indent on     " required
     
-###Step 2: Install nim.vim
+### Step 2: Install nim.vim
 
 On the line after `Bundle 'gmarik/vundle'`, add `Bundle 'zah/nim.vim'`. You may also want
 to add `Bundle 'scrooloose/syntastic'`. Save `~/.vimrc` and restart vim. Execute `:BundleInstall`
 and wait for nim.vim to be installed.
 
-##Final Step
+## Final Step
 Next you *need to add this* to your `~/.vimrc`:
 
     fun! JumpToDef()
@@ -102,12 +102,12 @@ to the definition of the word your cursor is on. This uses the nim compiler
 instead of ctags, so it works on any nimrod file which is compilable without
 requiring you to maintain a database file.
   
-#Other recomended Vim plugins
+# Other recomended Vim plugins
 
 * https://github.com/scrooloose/syntastic (copied bits from its readme)
 * https://github.com/Shougo/neocomplcache
 
-#If something goes wrong
+# If something goes wrong
 
 Since you are using vim, on source code which might have syntax problems,
 invoking an external tool which may have its own share of bugs, sometimes stuff
