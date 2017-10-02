@@ -1,4 +1,10 @@
-import threading, Queue, subprocess, signal, os, platform, getpass
+from sys import version_info
+import threading, subprocess, signal, os, platform, getpass
+
+if version_info[0] == 3:
+    import queue as Queue
+else:
+    import Queue
 
 try:
   import vim
