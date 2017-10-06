@@ -112,7 +112,7 @@ if nim_highlight_builtins == 1
   syn keyword nimBuiltin GC_disableMarkAnd Sweep GC_getStatistics GC_ref
   syn keyword nimBuiltin GC_ref GC_ref GC_unref GC_unref GC_unref quit
   syn keyword nimBuiltin OpenFile OpenFile CloseFile EndOfFile readChar
-  syn keyword nimBuiltin FlushFile readFile write readLine writeln writeln
+  syn keyword nimBuiltin FlushFile readfile readFile readline readLine write writeln writeLn writeline writeLine
   syn keyword nimBuiltin getFileSize ReadBytes ReadChars readBuffer writeBytes
   syn keyword nimBuiltin writeChars writeBuffer setFilePos getFilePos
   syn keyword nimBuiltin fileHandle countdown countup items lines
