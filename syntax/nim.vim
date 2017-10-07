@@ -90,8 +90,8 @@ endif
 
 if nim_highlight_builtins == 1
   " builtin functions, types and objects, not really part of the syntax
-  syn keyword nimBuiltin int int8 int16 int32 int64 uint uint8 uint16 uint32 uint64 float float32 float64 bool void
-  syn keyword nimBuiltin char string cstring pointer range array openarray seq
+  syn keyword nimBuiltin int int8 int16 int32 int64 uint uint8 uint16 uint32 uint64 float float32 float64
+  syn keyword nimBuiltin bool void chr char string cstring pointer range array openarray openArray seq varargs varArgs
   syn keyword nimBuiltin set Byte Natural Positive Conversion
   syn keyword nimBuiltin BiggestInt BiggestFloat cchar cschar cshort cint csize cuchar cushort
   syn keyword nimBuiltin clong clonglong cfloat cdouble clongdouble cuint culong culonglong cchar
