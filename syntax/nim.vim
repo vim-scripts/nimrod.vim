@@ -106,7 +106,7 @@ if nim_highlight_builtins == 1
   syn keyword nimBuiltin addquitproc addQuitProc
   syn keyword nimBuiltin copy setlen setLen newstring newString zeromem zeroMem copymem copyMem movemem moveMem
   syn keyword nimBuiltin equalmem equalMem alloc alloc0 realloc dealloc assert
-  syn keyword nimBuiltin swap getrefcount getRefcount getcurrentexception getCurrentException Msg
+  syn keyword nimBuiltin echo swap getrefcount getRefcount getcurrentexception getCurrentException Msg
   syn keyword nimBuiltin getoccupiedmem getOccupiedMem getfreemem getFreeMem gettotalmem getTotalMem isnil isNil seqtoptr seqToPtr
   syn keyword nimBuiltin find pop GC_disable GC_enable GC_fullCollect
   syn keyword nimBuiltin GC_setStrategy GC_enableMarkAndSweep GC_Strategy
